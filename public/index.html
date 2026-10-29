@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeonOtaku Music</title>
+  <style>
+    :root {
+      --bg: #090b17;
+      --panel: rgba(17, 19, 38, 0.75);
+      --panel-2: rgba(24, 27, 48, 0.9);
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #edf4ff;
+      --muted: #a8b4d8;
+      --pink: #ff5db1;
+      --purple: #8d7bff;
+      --blue: #4cc9ff;
+      --green: #73ffb8;
+      --yellow: #ffd166;
+      --shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: Inter, Segoe UI, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(141, 123, 255, 0.26), transparent 30%),
+        radial-gradient(circle at top right, rgba(255, 93, 177, 0.2), transparent 28%),
+        linear-gradient(135deg, #090b17 0%, #101426 35%, #0b0e1d 100%);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .app {
+      width: min(1200px, 100%);
+      background: rgba(12, 14, 28, 0.75);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(17, 19, 38, 0.8);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 12px 30px rgba(141, 123, 255, 0.5);
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 12px;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 770px;
+    }
+
+    .sidebar {
+      padding: 24px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(16, 18, 34, 0.64);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #ff7ac6, #a86bff, #5ed7ff);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .stat strong { display: block; font-size: 1.2rem; }
+    .stat span { color: var(--muted); font-size: 0.7rem; }
+
+    .genre-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .genre {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .content {
+      padding: 28px 22px 22px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(255, 93, 177, 0.18), rgba(141, 123, 255, 0.12), rgba(76, 201, 255, 0.14));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 210px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -40px -45px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+      filter: blur(8px);
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #dfe8ff;
+    }
+
+    h1 {
+      margin: 16px 0 8px;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: 0.2s ease;
+      color: var(--text);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 14px 30px rgba(255, 93, 177, 0.35);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+    }
+
+    .mini-player {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cover {
+      height: 140px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(141, 123, 255, 0.6), rgba(255, 93, 177, 0.45), rgba(76, 201, 255, 0.4));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.3), transparent 28%);
+    }
+
+    .track {
+      margin-top: 18px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 20px 0 14px;
+    }
+
+    .section-head h3 { font-size: 1.15rem; margin: 0; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .song-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 250px;
+    }
+
+    .song-art {
+      height: 132px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 93, 177, 0.45), rgba(141, 123, 255, 0.42), rgba(76, 201, 255, 0.38));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .song-art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 20%, rgba(255, 255, 255, 0.18) 50%, transparent 75%);
+    }
+
+    .song-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .song-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .song-artist {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .pill {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .song-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .small-btn {
+      flex: 1;
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .small-btn.primary {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+    }
+
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+      .hero { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">N</div>
+        <span>NeonOtaku</span>
+      </div>
+      <div class="nav">
+        <div class="chip">Discover</div>
+        <div class="chip">Library</div>
+        <div class="chip">Favorites</div>
+      </div>
+    </header>
+
+    <div class="main">
+      <aside class="sidebar">
+        <div class="panel">
+          <div class="user-card">
+            <div class="avatar">A</div>
+            <div>
+              <div class="user-name">Aiko</div>
+              <div class="small">Night mode • Tokyo</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong id="likedCount">0</strong>
+              <span>Liked</span>
+            </div>
+            <div class="stat">
+              <strong>12</strong>
+              <span>Playlist</span>
+            </div>
+            <div class="stat">
+              <strong>96%</strong>
+              <span>Vibe</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="small" style="margin-bottom:10px; font-weight:700;">Your taste</div>
+          <div class="genre-list">
+            <span class="genre">Lo-fi</span>
+            <span class="genre">Synthwave</span>
+            <span class="genre">Indie</span>
+            <span class="genre">Pop</span>
+            <span class="genre">Ambient</span>
+            <span class="genre">Jazz</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="small" style="margin-bottom:10px; font-weight:700;">Current mood</div>
+          <div class="genre-list">
+            <span class="genre">Calm</span>
+            <span class="genre">Dreamy</span>
+            <span class="genre">Focus</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="hero">
+          <div class="hero-card">
+            <span class="tag">For you</span>
+            <h1>Find your next favorite anime night mix.</h1>
+            <p>Curated tracks based on your moods, genres, and recent listens. Clean, soft energy for late-night study, city walks, and endless skies.</p>
+
+            <div class="cta-row">
+              <button class="btn primary">Play mix</button>
+              <button class="btn secondary">Refresh vibe</button>
+            </div>
+          </div>
+
+          <div class="mini-player">
+            <div class="cover"></div>
+            <div class="track">Moonlit Drift</div>
+            <div class="small" style="color:var(--muted);">Aoi • lo-fi / dreamy</div>
+          </div>
+        </section>
+
+        <div class="section-head">
+          <h3>Recommended for you</h3>
+          <span class="small" id="recLabel">Updated now</span>
+        </div>
+
+        <section id="songGrid" class="cards"></section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const userId = "66f2d4d0fb6d9f3a4e9d56ab";
+    const grid = document.getElementById("songGrid");
+    const likedCount = document.getElementById("likedCount");
+
+    async function fetchRecommendations() {
+      const res = await fetch(`/api/recommendations/${userId}`);
+      return res.json();
+    }
+
+    async function likeSong(songId) {
+      await fetch("/api/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, songId })
+      });
+      likedCount.textContent = String(Number(likedCount.textContent) + 1);
+    }
+
+    function renderSongs(items) {
+      grid.innerHTML = "";
+      items.forEach(song => {
+        const card = document.createElement("article");
+        card.className = "song-card";
+
+        card.innerHTML = `
+          <div class="song-art"></div>
+          <div class="song-meta">
+            <div>
+              <p class="song-title">${song.title}</p>
+              <div class="song-artist">${song.artist}</div>
+            </div>
+            <span class="pill">${song.genre}</span>
+          </div>
+          <div class="song-actions">
+            <button class="small-btn primary" data-id="${song._id}">Like</button>
+            <button class="small-btn">Play</button>
+          </div>
+        `;
+
+        card.querySelector(".small-btn.primary").addEventListener("click", () => likeSong(song._id));
+        grid.appendChild(card);
+      });
+    }
+
+    async function init() {
+      const recommended = await fetchRecommendations();
+      renderSongs(recommended);
+    }
+
+    init();
+  </script>
+</body>
+</html>
